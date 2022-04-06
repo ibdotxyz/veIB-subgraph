@@ -1,0 +1,23 @@
+
+type DepositEvent @entity {
+  "tx hash"
+  id: ID!
+
+  "provider address"
+  provider: String!
+
+  "veNFT token id"
+  tokenId: BigInt!
+
+  "deposit value"
+  value: BigInt!
+
+  "locktime"
+  lockTime: BigInt!
+
+  "deposit type"
+  depositType: Int!
+
+  "timestamp of this block"
+  blockTimestamp: BigInt!
+}

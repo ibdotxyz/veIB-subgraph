@@ -1,0 +1,24 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ve
+    network: fantom
+    source:
+      address: "0xE0B57FEEd45e7D908f2d0DaCd26F113Cf26715BF"
+      abi: ve
+      startBlock: 30511626
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - DepositEvent
+      abis:
+        - name: ve
+          file: ./abis/ve.json
+      eventHandlers:
+        - event: Deposit(indexed address,uint256,uint256,indexed uint256,uint8,uint256)
+          handler: handleDeposit
+      file: ./src/deposit.ts
