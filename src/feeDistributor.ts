@@ -43,6 +43,7 @@ export function handleCheckpointToken(event: CheckpointToken): void {
     );
   }
   feeDist.totalDeposited += event.params.tokens;
+  feeDist.save();
 }
 
 export function handleClaimed(event: Claimed): void {
@@ -55,6 +56,7 @@ export function handleClaimed(event: Claimed): void {
       event.address.toHexString(),
       feeDistributorContract.token().toHexString()
     );
+    feeDist.save();
   }
 
   let nft = NFT.load(event.params.tokenId.toString()) as NFT;
