@@ -47,6 +47,28 @@ dataSources:
         - event: FeeDistCreated(indexed address,indexed address,indexed address,uint256,address,address)
           handler: handleFeeDistCreated
       file: ./src/feeDistributor.ts
+  - kind: ethereum/contract
+    name: feeDistributor
+    network: fantom
+    source:
+      address: "0x8CFbE29030260b8931aE499eDf5cE3f3cb02226f"
+      abi: feeDistributor
+      startBlock: 36525835
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - FeeDistributor
+      abis:
+        - name: feeDistributor
+          file: ./abis/feeDistributor.json
+      eventHandlers:
+        - event: CheckpointToken(uint256,uint256)
+          handler: handleCheckpointToken
+        - event: Claimed(uint256,uint256,uint256,uint256)
+          handler: handleClaimed
+      file: ./src/feeDistributor.ts
 templates:
   - name: feeDistributor
     kind: ethereum/contract

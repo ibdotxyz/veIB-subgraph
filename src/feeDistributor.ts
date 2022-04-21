@@ -10,13 +10,25 @@ import {
   FeeToken,
   FeeClaimAction,
 } from "../generated/schema";
+import { feeDistributor } from "../generated/templates/feeDistributor/feeDistributor";
+
+function createFeeDist(
+  contractAddress: string,
+  tokenAddress: string
+): FeeDistributor {
+  let feeDist = new FeeDistributor(contractAddress);
+  feeDist.token = tokenAddress;
+  return feeDist;
+}
 
 export function handleFeeDistCreated(event: FeeDistCreated): void {
   let feeDist = FeeDistributor.load(event.params.dist.toHexString());
   if (feeDist == null) {
-    feeDist = new FeeDistributor(event.params.dist.toHexString());
+    feeDist = createFeeDist(
+      event.params.dist.toHexString(),
+      event.params.token.toHexString()
+    );
   }
-  feeDist.token = event.params.token.toHexString();
   feeDist.save();
 }
 export function handleCheckpointToken(event: CheckpointToken): void {
@@ -24,10 +36,11 @@ export function handleCheckpointToken(event: CheckpointToken): void {
     event.address.toHexString()
   ) as FeeDistributor;
   if (feeDist == null) {
-    log.error("[handleCheckpointToken] feeDistributor not found {}. Hash: {}", [
+    let feeDistributorContract = feeDistributor.bind(event.address);
+    feeDist = createFeeDist(
       event.address.toHexString(),
-      event.transaction.hash.toHex(),
-    ]);
+      feeDistributorContract.token().toHexString()
+    );
   }
   feeDist.totalDeposited += event.params.tokens;
 }
@@ -37,10 +50,11 @@ export function handleClaimed(event: Claimed): void {
     event.address.toHexString()
   ) as FeeDistributor;
   if (feeDist == null) {
-    log.error("[handleClaimed] feeDistributor not found {}. Hash: {}", [
+    let feeDistributorContract = feeDistributor.bind(event.address);
+    feeDist = createFeeDist(
       event.address.toHexString(),
-      event.transaction.hash.toHex(),
-    ]);
+      feeDistributorContract.token().toHexString()
+    );
   }
 
   let nft = NFT.load(event.params.tokenId.toString()) as NFT;
