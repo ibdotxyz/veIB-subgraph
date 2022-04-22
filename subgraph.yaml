@@ -6,9 +6,9 @@ dataSources:
     name: ve
     network: fantom
     source:
-      address: "0xE0B57FEEd45e7D908f2d0DaCd26F113Cf26715BF"
+      address: "0xBe33aD085e4a5559e964FA8790ceB83905062065"
       abi: ve
-      startBlock: 34010984
+      startBlock: 35855714
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -83,11 +83,10 @@ templates:
         - FeeDistributor
       abis:
         - name: feeDistributor
-          file: ./abis/feeDistributor.json 
+          file: ./abis/feeDistributor.json
       eventHandlers:
         - event: CheckpointToken(uint256,uint256)
           handler: handleCheckpointToken
         - event: Claimed(uint256,uint256,uint256,uint256)
           handler: handleClaimed
       file: ./src/feeDistributor.ts
-              
