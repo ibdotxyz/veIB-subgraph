@@ -1,13 +1,46 @@
+type FeeDistributor @entity {
+  "fee distributor contract address"
+  id: ID!
+
+  "token address"
+  token: String!
+
+  "total amount deposited"
+  totalDeposited: BigInt!
+
+  "total amount claimed by veNFT"
+  totalClaimed: BigInt!
+
+  "fee claim action array"
+  feeClaimActions: [FeeClaimAction!]! @derivedFrom(field:"feeDistributor")
+}
+
+type NFT @entity {
+  "token id"
+  id: ID!
+
+  "owner"
+  owner: String!
+
+  "fee token array"
+  feeTokens: [FeeToken!]! @derivedFrom(field: "nft")
+
+  "fee claim action array"
+  feeClaimActions: [FeeClaimAction!]! @derivedFrom(field:"nft")
+
+  "deposit event array"
+  depositEvents:[DepositEvent!]! @derivedFrom(field:"nft")
+}
 
 type DepositEvent @entity {
-  "tx hash"
+  "txid"
   id: ID!
 
   "provider address"
   provider: String!
 
-  "veNFT token id"
-  tokenId: BigInt!
+  "veNFT"
+  nft: NFT!
 
   "deposit value"
   value: BigInt!
@@ -20,4 +53,35 @@ type DepositEvent @entity {
 
   "timestamp of this block"
   blockTimestamp: BigInt!
+}
+
+type FeeClaimAction @entity{
+  "txid"
+  id: ID!
+
+  "veNFT"
+  nft: NFT!
+
+  "fee distributor"
+  feeDistributor: FeeDistributor!
+
+  "claimed amount"
+  amount: BigInt!
+
+  "claim timestamp"
+  blockTimestamp: BigInt!
+}
+
+type FeeToken @entity {
+  "veNFT tokenId + token address"
+  id: ID!
+
+  "token address" 
+  token: String!
+ 
+  "veNFT"
+  nft: NFT!
+
+  "total token claimed"
+  totalClaimed: BigInt!
 }

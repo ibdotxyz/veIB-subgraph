@@ -8,17 +8,86 @@ dataSources:
     source:
       address: "0xE0B57FEEd45e7D908f2d0DaCd26F113Cf26715BF"
       abi: ve
-      startBlock: 30511626
+      startBlock: 34010984
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DepositEvent
+        - NFT
       abis:
         - name: ve
           file: ./abis/ve.json
       eventHandlers:
         - event: Deposit(indexed address,uint256,uint256,indexed uint256,uint8,uint256)
           handler: handleDeposit
-      file: ./src/deposit.ts
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/ve.ts
+  - kind: ethereum/contract
+    name: feeDistributorFactory
+    network: fantom
+    source:
+      address: "0xEdAabA6DB46Bb1A7967e7490a024F07aBe0E8941"
+      abi: feeDistributorFactory
+      startBlock: 35888179
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - FeeDistributor
+      abis:
+        - name: feeDistributorFactory
+          file: ./abis/feeDistributorFactory.json
+        - name: feeDistributor
+          file: ./abis/feeDistributor.json
+      eventHandlers:
+        - event: FeeDistCreated(indexed address,indexed address,indexed address,uint256,address,address)
+          handler: handleFeeDistCreated
+      file: ./src/feeDistributor.ts
+  - kind: ethereum/contract
+    name: feeDistributor
+    network: fantom
+    source:
+      address: "0x8CFbE29030260b8931aE499eDf5cE3f3cb02226f"
+      abi: feeDistributor
+      startBlock: 36525835
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - FeeDistributor
+      abis:
+        - name: feeDistributor
+          file: ./abis/feeDistributor.json
+      eventHandlers:
+        - event: CheckpointToken(uint256,uint256)
+          handler: handleCheckpointToken
+        - event: Claimed(uint256,uint256,uint256,uint256)
+          handler: handleClaimed
+      file: ./src/feeDistributor.ts
+templates:
+  - name: feeDistributor
+    kind: ethereum/contract
+    network: fantom
+    source:
+      abi: feeDistributor
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - FeeDistributor
+      abis:
+        - name: feeDistributor
+          file: ./abis/feeDistributor.json 
+      eventHandlers:
+        - event: CheckpointToken(uint256,uint256)
+          handler: handleCheckpointToken
+        - event: Claimed(uint256,uint256,uint256,uint256)
+          handler: handleClaimed
+      file: ./src/feeDistributor.ts
+              
